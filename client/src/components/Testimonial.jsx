@@ -1,5 +1,6 @@
 import React from 'react'
 import Title from './Title'
+import { assets } from '../assets/assets';
 
 const Testimonial = () => {
 
@@ -12,8 +13,8 @@ const Testimonial = () => {
 
   return (
     <div className="py-28 px-6 md:px-16 lg:px-24 xl:px-44">
-            <Title title="ABCD" subTitle="XYZ" />
-            <div className="flex flex-wrap items-center justify-center gap-6 mt-20 mb-10">
+            <Title title="What Our Customers Say" subTitle="Discover why discerning travlers choose Stay Venture for their luxury accomodataion around the world" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
                 {testimonials.map((testimonial, index) => (
                     <div key={index} className="bg-white p-6 rounded-xl shadow-lg hover:-translate-y-1 transition-all duration-500">
                         <div className="flex items-center gap-3">
@@ -25,10 +26,10 @@ const Testimonial = () => {
                         </div>
                         <div className="flex items-center gap-1 mt-4">
                             {Array(5).fill(0).map((_, index) => (
-                                <Star key={index} filled={testimonial.rating > index} />
+                                <img key={index} src={assets.star_icon}/>
                             ))}
                         </div>
-                        <p className="text-gray-500 max-w-90 mt-4">"{testimonial.testimonial}"</p>
+                        <p className="text-gray-500 max-w-90 mt-4 font-light">"{testimonial.testimonial}"</p>
                     </div>
                 ))}
             </div>
