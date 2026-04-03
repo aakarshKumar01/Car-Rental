@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 
-const Navbar = () => {
+const Navbar = ({setShowLogin}) => {
 
     const location = useLocation();
     const [open, setOpen] = useState(false);
