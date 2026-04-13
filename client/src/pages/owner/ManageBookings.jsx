@@ -1,17 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { dummyMyBookingsData } from "../../assets/assets";
 import Title from "../../components/owner/Title";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 const ManageBookings = () => {
-  const currency = import.meta.env.VITE_CURRENCY;
+
+  const {currency, axios} = useAppContext()
+  
 
   const [bookings, setBookings] = useState([]);
 
-  const fetchOnerBookings = async () => {
-    setBookings(dummyMyBookingsData);
+  const fetchOwnerBookings = async () => {
+    try {
+      const {data} = await axios.get('/api/bookings/owner')
+      data.success ? setBookings(data.bookings) : toast.error(data.message)
+    } catch (error) {
+      toast.error(error.message)
+    }
+  };
+
+  const changeBookingStatus = async (bookingId, status) => {
+    try {
+      const {data} = await axios.post('/api/bookings/change-status', {bookingId, status})
+      if(data.success) {
+        toast.success(data.message)
+        fetchOwnerBookings()
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   useEffect(() => {
-    fetchOnerBookings();
+    fetchOwnerBookings();
   }, []);
 
   return (
@@ -46,7 +66,7 @@ const ManageBookings = () => {
                   />
 
                   <p className="max-md:hidden font-medium">
-                    {booking.car.brand} {booking.model}
+                    {booking.car.brand} {booking.car.model}
                   </p>
                 </td>
 
@@ -65,21 +85,12 @@ const ManageBookings = () => {
                 </td>
                 <td className="p-3">
                   {booking.status === "pending" ? (
-                    <select
+                    <select 
                       value={booking.status}
-                      onChange={(e) => {
-                        const updatedStatus = e.target.value;
-                        setBookings((prev) =>
-                          prev.map((b) =>
-                            b._id === booking._id
-                              ? { ...b, status: updatedStatus }
-                              : b,
-                          ),
-                        );
-                      }}
+                      onChange={e => changeBookingStatus(booking._id, e.target.value)}
                       className="px-2 py-1.5 mt-1 text-gray-500 border border-borderColor rounded-md outline-none"
                     >
-                      <option value="pening">Pending</option>
+                      <option value="pending">Pending</option>
                       <option value="cancelled">Cancelled</option>
                       <option value="confirmed">Confirmed</option>
                     </select>
